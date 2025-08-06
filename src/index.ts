@@ -1,7 +1,8 @@
-import { CommandsRegistry, registerCommand, runCommand } from "./commands/commandHandler.js";
-import { handlerLogin } from "./commands/login.js";
+import { CommandsRegistry, registerCommand, runCommand } from "./commands/commandHandler";
+import { handlerLogin } from "./commands/login";
+import { handlerRegister } from "./commands/register";
 
-function main() {
+async function main() {
     const args = process.argv.slice(2);
 
     if (args.length < 1) {
@@ -15,9 +16,11 @@ function main() {
     const registry: CommandsRegistry = {};
 
     registerCommand(registry, "login", handlerLogin);
+    registerCommand(registry, "register", handlerRegister);
 
     try {
-        runCommand(registry, cmdName, ...cmdargs);
+       await runCommand(registry, cmdName, ...cmdargs);
+       process.exit(0);
     } catch (error) {
         if (error instanceof Error) {
             console.log(`Error running command '${cmdName}': ${error.message}`);
@@ -26,7 +29,6 @@ function main() {
         }
       process.exit(1)
     }
-
 }
 
 main();
