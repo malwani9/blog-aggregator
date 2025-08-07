@@ -13,21 +13,6 @@ export function setUser(userName: string): void {
     configObj.currentUserName = userName;
     writeConfig(configObj);
 }
-export function readConfig() {
-    const configPath = getConfigFilePath();
-
-    const data = fs.readFileSync(configPath, {encoding: 'utf-8'});
-    const rawConfig = JSON.parse(data);
-
-    return validateConfig(rawConfig); 
-}
-
-function getConfigFilePath(): string {
-    const homeDir = os.homedir();
-    const configFile = '.gatorconfig.json';
-    const targetPath = path.join(homeDir, configFile);
-    return targetPath;
-}
 
 function validateConfig(rawConfig: any) {
     if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
@@ -40,10 +25,26 @@ function validateConfig(rawConfig: any) {
 
     const config: Config = {
         dbUrl: rawConfig.db_url,
-        currentUserName: rawConfig.curren_user_name,
+        currentUserName: rawConfig.current_user_name,
     }
 
     return config;
+}
+
+export function readConfig() {
+    const configPath = getConfigFilePath();
+
+    const data = fs.readFileSync(configPath, 'utf-8');
+    const rawConfig = JSON.parse(data);
+
+    return validateConfig(rawConfig); 
+}
+
+function getConfigFilePath(): string {
+    const configFile = '.gatorconfig.json';
+    const homeDir = os.homedir();
+    const targetPath = path.join(homeDir, configFile);
+    return targetPath;
 }
 
 function writeConfig(config: Config): void {
