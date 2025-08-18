@@ -1,10 +1,13 @@
+import { handlerAggregator } from "./commands/aggregator";
 import { CommandsRegistry, registerCommand, runCommand } from "./commands/commandHandler";
 import { handlerLogin } from "./commands/login";
 import { handlerRegister } from "./commands/register";
 import { handlerReset } from "./commands/reset";
 import { handlerUsers } from "./commands/users";
+import { fetchFeed } from "./rssFeed.js"
 
 async function main() {
+    await fetchFeed("https://www.wagslane.dev/index.xml");
     const args = process.argv.slice(2);
 
     if (args.length < 1) {
@@ -21,6 +24,7 @@ async function main() {
     registerCommand(registry, "register", handlerRegister);
     registerCommand(registry, "reset", handlerReset);
     registerCommand(registry, "users", handlerUsers);
+    registerCommand(registry, "agg", handlerAggregator);
 
     try {
        await runCommand(registry, cmdName, ...cmdargs);
