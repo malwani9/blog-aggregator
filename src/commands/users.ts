@@ -1,5 +1,5 @@
 import { getUsers } from "src/db/queries/users.js";
-import { readConfig } from "src/config.js";
+import { readConfig } from "src/db/queries/config.js";
 
 export async function handlerUsers(cmdName: string, ...args: string[]): Promise<void> {
     const config = readConfig();

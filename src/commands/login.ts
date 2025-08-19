@@ -1,5 +1,5 @@
 import { getUser } from "src/db/queries/users.js";
-import { setUser } from "../config.js";
+import { setUser } from "../db/queries/config.js";
 
 export async function handlerLogin(cmdName: string, ...args: string[]): Promise<void> {
     if (args.length !== 1) {
@@ -8,7 +8,7 @@ export async function handlerLogin(cmdName: string, ...args: string[]): Promise<
 
     const username = args[0];
     const user = await getUser(username);
-    if (user.length === 0) {
+    if (!user) {
         throw new Error(`login fail, username: ${username} does not exist!!!`);
     }
 

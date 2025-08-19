@@ -1,4 +1,4 @@
-import { setUser } from "src/config";
+import { setUser } from "src/db/queries/config";
 import { createUser} from "src/db/queries/users";
 
 export async function handlerRegister(cmdName: string, ...args: string[]): Promise<void> {
