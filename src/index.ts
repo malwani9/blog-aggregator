@@ -1,8 +1,8 @@
-import { handlerAddFeed } from "./commands/feeds";
+import { handlerAddFeed, handlerListFeeds } from "./commands/feeds";
 import { handlerAggregator } from "./commands/aggregator";
 import { CommandsRegistry, registerCommand, runCommand } from "./commands/commandHandler";
 import { handlerReset } from "./commands/reset";
-import { handlerLogin, handlerRegister, handlerUsers } from "./commands/users";
+import { handlerLogin, handlerRegister, handlerListUsers } from "./commands/users";
 import { fetchFeed } from "./rssFeed.js"
 
 async function main() {
@@ -22,9 +22,10 @@ async function main() {
     registerCommand(registry, "login", handlerLogin);
     registerCommand(registry, "register", handlerRegister);
     registerCommand(registry, "reset", handlerReset);
-    registerCommand(registry, "users", handlerUsers);
+    registerCommand(registry, "users", handlerListUsers);
     registerCommand(registry, "agg", handlerAggregator);
     registerCommand(registry, "addfeed", handlerAddFeed);
+    registerCommand(registry, "feeds", handlerListFeeds);
 
     try {
        await runCommand(registry, cmdName, ...cmdargs);

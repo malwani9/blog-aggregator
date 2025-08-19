@@ -34,7 +34,7 @@ export async function handlerRegister(cmdName: string, ...args: string[]): Promi
 
 }
 
-export async function handlerUsers(cmdName: string, ...args: string[]): Promise<void> {
+export async function handlerListUsers(_: string): Promise<void> {
     const config = readConfig();
     const users = await getUsers();
     for (const user of users) {

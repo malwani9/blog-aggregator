@@ -1,7 +1,7 @@
 import { readConfig } from "src/db/queries/config";
-import { createFeed } from "src/db/queries/feeds";
-import { getUser } from "src/db/queries/users.js";
-import { feeds, users } from "src/db/schema";
+import { createFeed, getFeeds } from "src/db/queries/feeds";
+import { getUser, getUserById } from "src/db/queries/users.js";
+import { Feed, feeds, User, users } from "src/db/schema";
 
 export async function handlerAddFeed(cmdName: string, ...args: string[]): Promise<void> {
         
@@ -35,8 +35,22 @@ function printFeed(feed: Feed, user: User) {
     console.log(`* Updated:  ${feed.updatedAt}`);
     console.log(`* Name:     ${feed.name}`);
     console.log(`* URL:      ${feed.url}`);
-    console.log(`* User:       ${user.name}`);
+    console.log(`* User:     ${user.name}`);
 } 
 
-export type Feed = typeof feeds.$inferSelect;
-export type User = typeof users.$inferSelect;
+export async function handlerListFeeds(_:string) {
+    const feeds = await getFeeds();
+    if (feeds.length === 0) {
+        console.log("No feeds found.");
+        return;
+    }
+    for (const feed of feeds) {
+        const user = await getUserById(feed.user_id);
+        if (!user) {
+            throw new Error(`No user found for this feed: ID: ${feed.id}, NAME: ${feed.name}`)
+        } 
+
+        printFeed(feed, user);
+        console.log("-------------------------");
+    }
+}
