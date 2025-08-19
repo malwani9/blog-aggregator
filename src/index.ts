@@ -1,10 +1,8 @@
-import { handlerAddFeed } from "./commands/addfeed";
+import { handlerAddFeed } from "./commands/feeds";
 import { handlerAggregator } from "./commands/aggregator";
 import { CommandsRegistry, registerCommand, runCommand } from "./commands/commandHandler";
-import { handlerLogin } from "./commands/login";
-import { handlerRegister } from "./commands/register";
 import { handlerReset } from "./commands/reset";
-import { handlerUsers } from "./commands/users";
+import { handlerLogin, handlerRegister, handlerUsers } from "./commands/users";
 import { fetchFeed } from "./rssFeed.js"
 
 async function main() {
