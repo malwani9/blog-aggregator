@@ -1,5 +1,5 @@
 import { createUser, getUser, getUsers } from "src/db/queries/users.js";
-import { readConfig, setUser } from "src/db/queries/config.js";
+import { readConfig, setUser } from "src/config.js";
 
 
 export async function handlerLogin(cmdName: string, ...args: string[]): Promise<void> {
