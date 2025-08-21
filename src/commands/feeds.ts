@@ -2,7 +2,7 @@ import { error } from "console";
 import { readConfig } from "src/config";
 import { createFeed, creatFeedFollow, getFeedById, getFeedByURL, getFollowedFeedsByUserId, getFeeds } from "src/db/queries/feeds";
 import { getUser, getUserById } from "src/db/queries/users.js";
-import { Feed, feeds, User, users } from "src/db/schema";
+import { Feed, feed_follows, feeds, User, users } from "src/db/schema";
 
 export async function handlerAddFeed(cmdName: string, ...args: string[]): Promise<void> {
         
@@ -68,8 +68,14 @@ export async function handlerFollowFeed(cmdName: string, ...args: string[]) {
         throw new Error(`Feed ${feedURL} not found`);
     }
 
+    const config = readConfig();
+    const currentUser = await getUser(config.currentUserName);
+    if (!currentUser) {
+        throw new Error(`User ${currentUser} not found`);
+    }
+
     const feed_id = feed.id; 
-    const user_id = feed.user_id
+    const user_id = currentUser.id
 
     const feed_follow = await creatFeedFollow(user_id, feed_id);
     if (!feed_follow) { 
@@ -88,7 +94,7 @@ export async function handlergetFollowedFeedsForUser(_: string) {
     }
 
     const followedFeeds = await getFollowedFeedsByUserId(currentUser.id);
-
+    console.log(followedFeeds)
     if(followedFeeds.length === 0) {
         throw new Error(`No feeds found for user: ${currentUser.name}`);
     }
@@ -98,6 +104,6 @@ export async function handlergetFollowedFeedsForUser(_: string) {
         if (!feed) {
             throw new Error("Feed not found");
         }
-        console.log(feed.name);
+        console.log(`${feed.name} || ${currentUser.name}`);
     }
 }
