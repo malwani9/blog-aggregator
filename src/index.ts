@@ -1,9 +1,10 @@
-import { handlerAddFeed, handlerFollowFeed, handlergetFollowedFeedsForUser, handlerListFeeds } from "./commands/feeds";
+import { handlerAddFeed, handlerListFeeds } from "./commands/feeds";
 import { handlerAggregator } from "./commands/aggregator";
 import { CommandsRegistry, registerCommand, runCommand } from "./commands/commandHandler";
 import { handlerReset } from "./commands/reset";
 import { handlerLogin, handlerRegister, handlerListUsers } from "./commands/users";
 import { fetchFeed } from "./rssFeed.js"
+import { handlerFollowFeed, handlergetFollowedFeedsForUser } from "./commands/feed_follows";
 
 async function main() {
     await fetchFeed("https://www.wagslane.dev/index.xml");

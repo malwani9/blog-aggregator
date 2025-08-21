@@ -1,8 +1,9 @@
-import { error } from "console";
 import { readConfig } from "src/config";
-import { createFeed, creatFeedFollow, getFeedById, getFeedByURL, getFollowedFeedsByUserId, getFeeds } from "src/db/queries/feeds";
+import { creatFeedFollow } from "src/db/queries/feed_follows";
+import { createFeed, getFeeds } from "src/db/queries/feeds";
 import { getUser, getUserById } from "src/db/queries/users.js";
-import { Feed, feed_follows, feeds, User, users } from "src/db/schema";
+import { Feed, User } from "src/db/schema";
+import { printFeedFollow } from "./feed_follows";
 
 export async function handlerAddFeed(cmdName: string, ...args: string[]): Promise<void> {
         
@@ -24,10 +25,15 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]): Promis
     if (!feed) {
         throw new Error("Failed to create feed");
     }
-    const feedFollow = await creatFeedFollow(user_id, feed.id);
-    console.log("Feed created and followed successfully: ")
-    console.log("----------------------------")
+
+    console.log("Feed created successfully: ");
+    console.log("----------------------------");
     printFeed(feed, currentUser);
+
+    const feedFollow = await creatFeedFollow(user_id, feed.id);
+    console.log("Feed Followed: ");
+    console.log("----------------------------");
+    printFeedFollow(feedFollow.userName, feedFollow.feedName);
 
 }
 
@@ -54,56 +60,5 @@ export async function handlerListFeeds(_:string) {
 
         printFeed(feed, user);
         console.log("-------------------------");
-    }
-}
-
-export async function handlerFollowFeed(cmdName: string, ...args: string[]) {
-    if (args.length !== 1) {
-        throw new Error(`usage: ${cmdName} <url>`);
-    }
-
-    const feedURL = args[0]
-    const feed = await getFeedByURL(feedURL);
-    if (!feed) {
-        throw new Error(`Feed ${feedURL} not found`);
-    }
-
-    const config = readConfig();
-    const currentUser = await getUser(config.currentUserName);
-    if (!currentUser) {
-        throw new Error(`User ${currentUser} not found`);
-    }
-
-    const feed_id = feed.id; 
-    const user_id = currentUser.id
-
-    const feed_follow = await creatFeedFollow(user_id, feed_id);
-    if (!feed_follow) { 
-       throw new Error("Failed to create feed follow");
-    }
-
-    console.log(`user: ${feed_follow.userName} start following ${feed_follow.feedName} feed`);
-}
-
-
-export async function handlergetFollowedFeedsForUser(_: string) {
-    const config = readConfig();
-    const currentUser = await getUser(config.currentUserName);
-    if (!currentUser) {
-        throw new Error(`User ${currentUser} not found`);
-    }
-
-    const followedFeeds = await getFollowedFeedsByUserId(currentUser.id);
-    console.log(followedFeeds)
-    if(followedFeeds.length === 0) {
-        throw new Error(`No feeds found for user: ${currentUser.name}`);
-    }
-
-    for (const followedFeed of followedFeeds){
-        const feed = await getFeedById(followedFeed.feedId);
-        if (!feed) {
-            throw new Error("Feed not found");
-        }
-        console.log(`${feed.name} || ${currentUser.name}`);
     }
 }
