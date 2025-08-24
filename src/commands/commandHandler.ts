@@ -1,6 +1,15 @@
+import { User } from "src/db/schema";
+
 export type commandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
 
 export type CommandsRegistry = Record<string, commandHandler>;
+
+export type UserCommandHandler = (
+    cmdName: string,
+    user: User,
+    ...args: string[]
+  ) => Promise<void>;
+
 
 
 export function registerCommand(registry: CommandsRegistry,cmdName: string, handler: commandHandler): void {

@@ -1,5 +1,6 @@
 import { createUser, getUser, getUsers } from "src/db/queries/users.js";
 import { readConfig, setUser } from "src/config.js";
+import { User } from "src/db/schema";
 
 
 export async function handlerLogin(cmdName: string, ...args: string[]): Promise<void> {
@@ -35,8 +36,8 @@ export async function handlerRegister(cmdName: string, ...args: string[]): Promi
 }
 
 export async function handlerListUsers(_: string): Promise<void> {
-    const config = readConfig();
     const users = await getUsers();
+    const config = readConfig();
     for (const user of users) {
         if (user.name === config.currentUserName) {
             console.log(`* ${user.name} (current)`);
