@@ -6,6 +6,7 @@ import { handlerLogin, handlerRegister, handlerListUsers } from "./commands/user
 import { fetchFeed } from "./rssFeed.js"
 import { handlerFollowFeed, handlergetFollowedFeedsForUser, handlerUnFollowFeed } from "./commands/feed_follows";
 import { middlewareLoggedIn } from "./middleware/loggingInMiddleware";
+import { handlergetPostsForUser } from "./commands/posts";
 
 async function main() {
     await fetchFeed("https://www.wagslane.dev/index.xml");
@@ -31,6 +32,7 @@ async function main() {
     registerCommand(registry, "follow", middlewareLoggedIn(handlerFollowFeed));
     registerCommand(registry, "following", middlewareLoggedIn(handlergetFollowedFeedsForUser));
     registerCommand(registry, "unfollow", middlewareLoggedIn(handlerUnFollowFeed));
+    registerCommand(registry, "browse", middlewareLoggedIn(handlergetPostsForUser));
 
     try {
        await runCommand(registry, cmdName, ...cmdargs);

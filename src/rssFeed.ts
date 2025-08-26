@@ -66,7 +66,7 @@ export async function fetchFeed(feedURL: string) {
       });
     }
 
-    const rssFeed = {
+    const rssFeed: RSSFeed = {
         channel: {
           title: channel.title,
           link: channel.link,

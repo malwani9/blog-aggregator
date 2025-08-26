@@ -6,7 +6,9 @@ export function parseDuration(durationStr: string): number {
         throw new Error(`Failed to parse duration: ${durationStr}`);
     }
 
-    let value = parseInt(match[1]);
+    if (match.length !== 3) return 0;
+
+    let value = parseInt(match[1], 10);
     const unit = match[2];
 
     switch (unit) {

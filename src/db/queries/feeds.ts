@@ -1,5 +1,5 @@
 import { db } from "..";
-import { Feed, feeds } from "../schema";
+import { feeds } from "../schema";
 import { eq, sql } from "drizzle-orm";
 import { firstOrUndefined } from "./utils";
 

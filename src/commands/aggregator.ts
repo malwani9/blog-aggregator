@@ -1,4 +1,6 @@
 import { getNextFeedToFetch, markFeedFetched } from "src/db/queries/feeds";
+import { createPost } from "src/db/queries/posts";
+import { NewPost } from "src/db/schema";
 import { parseDuration } from "src/lib/time";
 import { fetchFeed } from "src/rssFeed";
 
@@ -48,6 +50,18 @@ async function scrapeFeeds() {
     console.log("===========================================");
     for (const post of feed.channel.item) {
         console.log(` * ${post.title}`);
+        const now = new Date();
+        await createPost({
+            title: post.title,
+            url: post.link,
+            description: post.description,
+            publishDate: new Date(post.pubDate),
+            feed_id: nextFeed.id,
+            createdAt: now,
+            updatedAt: now,
+            } satisfies NewPost);
+        console.log(`Post add to DB.`);
+
     }
     console.log("===========================================");
 }
